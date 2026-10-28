@@ -88,9 +88,14 @@
                                     data-poli="{{ $jadwal->dokter->id_poli ?? ($jadwal->dokter->poli->id ?? '') }}"
                                     {{ old('id_jadwal') == $jadwal->id ? 'selected' : '' }}>
                                 {{ $jadwal->dokter->nama ?? 'Dokter' }} | {{ $jadwal->hari }} ({{ date('H:i', strtotime($jadwal->jam_mulai)) }} - {{ date('H:i', strtotime($jadwal->jam_selesai)) }})
+                                {{ $jadwal->is_aktif ? '✓ Aktif' : '— Tidak Aktif' }}
                             </option>
                         @endforeach
                     </select>
+                    <p class="text-xs text-slate-400 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Jadwal bertanda <strong>✓ Aktif</strong> sedang berjalan hari ini sesuai jam periksa.
+                    </p>
                     @error('id_jadwal')
                         <p class="text-rose-500 text-xs mt-1">{{ $message }}</p>
                     @enderror

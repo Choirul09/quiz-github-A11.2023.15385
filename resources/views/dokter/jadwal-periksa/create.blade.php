@@ -72,16 +72,15 @@
                         @enderror
                     </div>
 
-                    {{-- Status --}}
+                    {{-- Status (otomatis) --}}
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">
                             Status
                         </label>
-                        <select name="status" class="w-full border-2 border-slate-300 rounded-lg p-2
-                                     focus:border-primary focus:outline-none">
-                            <option value="Y" {{ old('status') == 'Y' ? 'selected' : '' }}>Aktif</option>
-                            <option value="N" {{ old('status') == 'N' ? 'selected' : '' }}>Tidak Aktif</option>
-                        </select>
+                        <div class="w-full border-2 border-slate-200 bg-slate-50 rounded-lg p-2 text-slate-500 text-sm">
+                            <i class="fas fa-info-circle mr-1 text-blue-400"></i>
+                            Status ditentukan otomatis berdasarkan hari &amp; jam
+                        </div>
                     </div>
 
                 </div>

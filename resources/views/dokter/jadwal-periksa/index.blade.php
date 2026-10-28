@@ -66,7 +66,7 @@
                             </td>
 
                             <td class="px-6 py-4 text-slate-600">
-                                @if($jadwal->status == 'Y' || $jadwal->status == 'Aktif')
+                                @if($jadwal->is_aktif)
                                     <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                                         Aktif
                                     </span>

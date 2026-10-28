@@ -35,7 +35,6 @@ class JadwalPeriksaController extends Controller
             'hari'        => $request->hari,
             'jam_mulai'   => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
-            'status'      => $request->status ?? 'Y', // opsional default aktif
         ]);
 
         return redirect()
@@ -70,7 +69,6 @@ class JadwalPeriksaController extends Controller
             'hari'        => $request->hari,
             'jam_mulai'   => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
-            'status'      => $request->status ?? $jadwalPeriksa->status,
         ]);
 
         return redirect()

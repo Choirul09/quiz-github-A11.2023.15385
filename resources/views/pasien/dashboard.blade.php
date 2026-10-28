@@ -119,6 +119,7 @@
                             <th class="px-6 py-4">Dokter</th>
                             <th class="px-6 py-4">Hari</th>
                             <th class="px-6 py-4">Jam Periksa</th>
+                            <th class="px-6 py-4 text-center">Status</th>
                             <th class="px-6 py-4 text-center">Sedang Dilayani</th>
                         </tr>
                     </thead>
@@ -143,6 +144,19 @@
                                 {{ substr($j->jam_mulai, 0, 5) }} - {{ substr($j->jam_selesai, 0, 5) }} WIB
                             </td>
                             <td class="px-6 py-4 text-center">
+                                @if($j->is_aktif)
+                                    <span class="badge-status-aktif inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        Aktif
+                                    </span>
+                                @else
+                                    <span class="badge-status-aktif inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        Tidak Aktif
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-center">
                                 <span class="badge-sedang-dilayani inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200 min-w-[70px]">
                                     {{ $j->antrian_sekarang ?? 0 }}
                                 </span>
@@ -150,7 +164,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center py-12 text-slate-400">
+                            <td colspan="7" class="text-center py-12 text-slate-400">
                                 Belum ada jadwal poliklinik tersedia
                             </td>
                         </tr>
@@ -184,11 +198,12 @@
                         }
                     }
 
-                    // Update nomor sedang dilayani per row jadwal
+                    // Update nomor sedang dilayani & status aktif per row jadwal
                     if (data.jadwals && data.jadwals.length > 0) {
                         data.jadwals.forEach(j => {
                             const row = document.getElementById('row-jadwal-' + j.id);
                             if (row) {
+                                // Update badge sedang dilayani
                                 const badge = row.querySelector('.badge-sedang-dilayani');
                                 if (badge && badge.textContent.trim() != j.antrian_sekarang) {
                                     badge.textContent = j.antrian_sekarang;
@@ -196,6 +211,19 @@
                                     setTimeout(() => {
                                         badge.classList.remove('bg-emerald-100', 'text-emerald-800');
                                     }, 1500);
+                                }
+
+                                // Update badge status aktif/tidak aktif
+                                const statusBadge = row.querySelector('.badge-status-aktif');
+                                if (statusBadge) {
+                                    const dot = statusBadge.querySelector('span');
+                                    if (j.is_aktif) {
+                                        statusBadge.className = 'badge-status-aktif inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+                                        statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Aktif';
+                                    } else {
+                                        statusBadge.className = 'badge-status-aktif inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200';
+                                        statusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Tidak Aktif';
+                                    }
                                 }
                             }
                         });

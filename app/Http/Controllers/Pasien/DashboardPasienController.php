@@ -56,12 +56,13 @@ class DashboardPasienController extends Controller
             ] : null,
             'jadwals' => $jadwals->map(function ($j) {
                 return [
-                    'id' => $j->id,
-                    'poli' => $j->dokter->poli->nama_poli ?? 'Poli Umum',
-                    'dokter' => $j->dokter->nama ?? 'Dokter',
-                    'hari' => $j->hari,
-                    'jam' => substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5),
+                    'id'               => $j->id,
+                    'poli'             => $j->dokter->poli->nama_poli ?? 'Poli Umum',
+                    'dokter'           => $j->dokter->nama ?? 'Dokter',
+                    'hari'             => $j->hari,
+                    'jam'              => substr($j->jam_mulai, 0, 5) . ' - ' . substr($j->jam_selesai, 0, 5),
                     'antrian_sekarang' => $j->antrian_sekarang ?? 0,
+                    'is_aktif'         => $j->is_aktif,
                 ];
             }),
         ]);
