@@ -26,6 +26,32 @@ class PeriksaPasienController extends Controller
         return view('dokter.periksa-pasien.index', compact('daftarPasien'));
     }
 
+    public function panggilAntrian($id)
+    {
+        $daftarPoli = DaftarPoli::with('jadwalPeriksa')->findOrFail($id);
+        $jadwal = $daftarPoli->jadwalPeriksa;
+
+        if ($jadwal && $jadwal->id_dokter == Auth::id()) {
+            $jadwal->update([
+                'antrian_sekarang' => $daftarPoli->no_antrian,
+            ]);
+
+            try {
+                broadcast(new \App\Events\AntrianUpdated($jadwal->id, $daftarPoli->no_antrian));
+            } catch (\Throwable $e) {
+                // broadcast silent catch jika reverb belum running
+            }
+
+            return redirect()->back()
+                ->with('message', "Nomor antrian {$daftarPoli->no_antrian} sedang dipanggil.")
+                ->with('type', 'success');
+        }
+
+        return redirect()->back()
+            ->with('message', 'Akses tidak diizinkan.')
+            ->with('type', 'error');
+    }
+
     public function create($id)
     {
         $daftarPoli = DaftarPoli::with('pasien')->findOrFail($id);
@@ -50,9 +76,24 @@ class PeriksaPasienController extends Controller
         'tgl_periksa'    => $request->tgl_periksa ?? now(),
         'catatan'        => $request->catatan,
         'biaya_periksa'  => $request->biaya_periksa,
+        'status_pembayaran' => 'belum_bayar',
     ]);
 
-    // 2. Simpan Rincian Obat jika ada yang dipilih
+    // 2. Update antrian sekarang pada jadwal periksa jika nomor ini lebih besar
+    $daftarPoli = DaftarPoli::with('jadwalPeriksa')->find($request->id_daftar_poli);
+    if ($daftarPoli && $daftarPoli->jadwalPeriksa) {
+        $jadwal = $daftarPoli->jadwalPeriksa;
+        $nomorBerikutnya = $daftarPoli->no_antrian;
+        $jadwal->update(['antrian_sekarang' => $nomorBerikutnya]);
+
+        try {
+            broadcast(new \App\Events\AntrianUpdated($jadwal->id, $nomorBerikutnya));
+        } catch (\Throwable $e) {
+            // silent catch
+        }
+    }
+
+    // 3. Simpan Rincian Obat jika ada yang dipilih
     if ($request->has('obat') && is_array($request->obat)) {
         foreach ($request->obat as $idObat) {
             DetailPeriksa::create([

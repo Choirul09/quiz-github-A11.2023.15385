@@ -12,11 +12,33 @@
             {{-- Alert Notifikasi --}}
             @if(session('message'))
                 <div class="mb-6 p-4 rounded-xl flex items-center gap-3 border shadow-sm {{ session('type') == 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200' }}">
-                    <i class="fas fa-circle-check text-emerald-600 text-lg"></i>
+                    <i class="fas {{ session('type') == 'success' ? 'fa-circle-check text-emerald-600' : 'fa-circle-exclamation text-rose-600' }} text-lg"></i>
                     <span class="font-medium text-sm">{{ session('message') }}</span>
                 </div>
             @endif
 
+            @if(isset($antrianAktif) && $antrianAktif)
+                <div class="p-6 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 space-y-4">
+                    <div class="flex items-center gap-3 font-bold text-base text-amber-800">
+                        <i class="fas fa-triangle-exclamation text-xl text-amber-600"></i>
+                        Anda Masih Memiliki Antrian Aktif
+                    </div>
+                    <p class="text-xs text-amber-700 leading-relaxed">
+                        Sesuai ketentuan, pasien tidak dapat mendaftar ke dua poli sekaligus. Anda hanya dapat mendaftar kembali setelah pemeriksaan selesai dilakukan oleh dokter.
+                    </p>
+                    <div class="bg-white p-4 rounded-xl border border-amber-200/80 text-xs text-slate-700 space-y-1.5">
+                        <div><span class="font-semibold text-slate-500">Poli Tujuan:</span> <span class="font-bold text-slate-800">{{ $antrianAktif->jadwalPeriksa->dokter->poli->nama_poli ?? 'Poliklinik' }}</span></div>
+                        <div><span class="font-semibold text-slate-500">Dokter:</span> {{ $antrianAktif->jadwalPeriksa->dokter->nama ?? 'Dokter' }}</div>
+                        <div><span class="font-semibold text-slate-500">Nomor Antrian Anda:</span> <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded">{{ $antrianAktif->no_antrian }}</span></div>
+                    </div>
+                    <div class="pt-2">
+                        <a href="{{ route('pasien.dashboard') }}"
+                           class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition">
+                            <i class="fas fa-gauge-high"></i> Lihat Status di Dashboard
+                        </a>
+                    </div>
+                </div>
+            @else
             <form action="{{ route('pasien.daftar.submit') }}" method="POST" class="space-y-5">
                 @csrf
 
@@ -95,6 +117,7 @@
                     </button>
                 </div>
             </form>
+            @endif
 
         </div>
     </div>

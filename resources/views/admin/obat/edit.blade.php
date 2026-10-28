@@ -57,20 +57,37 @@
 
                 </div>
 
-                {{-- Harga --}}
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">
-                        Harga <span class="text-red-500">*</span>
-                    </label>
-                    <input type="number" name="harga" value="{{ old('harga', $obat->harga) }}"
-                        placeholder="Masukkan harga obat..."
-                        class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
-                               focus:border-primary focus:outline-none
-                               @error('harga') border-red-500 @enderror"
-                        required>
-                    @error('harga')
-                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
+                {{-- Harga & Stok --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">
+                            Harga <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="harga" value="{{ old('harga', $obat->harga) }}"
+                            placeholder="Masukkan harga obat..."
+                            class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
+                                   focus:border-primary focus:outline-none
+                                   @error('harga') border-red-500 @enderror"
+                            required>
+                        @error('harga')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">
+                            Stok <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" name="stok" value="{{ old('stok', $obat->stok ?? 0) }}"
+                            placeholder="Jumlah stok obat..."
+                            class="w-full px-4 py-2 rounded-lg border-2 border-slate-300 
+                                   focus:border-primary focus:outline-none
+                                   @error('stok') border-red-500 @enderror"
+                            required min="0">
+                        @error('stok')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 {{-- Buttons --}}

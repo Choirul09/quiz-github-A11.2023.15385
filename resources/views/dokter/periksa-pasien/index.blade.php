@@ -60,20 +60,33 @@
 
                             {{-- Aksi --}}
                             <td class="px-6 py-4 text-right">
-                                @if($daftar->periksa)
-                                    {{-- Status: Sudah Diperiksa --}}
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        Sudah Diperiksa
-                                    </span>
-                                @else
-                                    {{-- Button: Periksa --}}
-                                    <a href="{{ route('periksa-pasien.create', $daftar->id) }}" 
-                                       class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg shadow-sm transition">
-                                        <i class="fas fa-stethoscope text-xs"></i>
-                                        Periksa
-                                    </a>
-                                @endif
+                                <div class="inline-flex items-center gap-2 justify-end">
+                                    @if($daftar->periksa)
+                                        {{-- Status: Sudah Diperiksa --}}
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Sudah Diperiksa
+                                        </span>
+                                    @else
+                                        {{-- Button: Panggil Antrian --}}
+                                        <form action="{{ route('dokter.panggil-antrian', $daftar->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit"
+                                                    title="Panggil nomor antrian ini (update live antrian)"
+                                                    class="inline-flex items-center gap-1.5 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg transition">
+                                                <i class="fas fa-bullhorn text-xs"></i>
+                                                Panggil
+                                            </button>
+                                        </form>
+
+                                        {{-- Button: Periksa --}}
+                                        <a href="{{ route('periksa-pasien.create', $daftar->id) }}" 
+                                           class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                                            <i class="fas fa-stethoscope text-xs"></i>
+                                            Periksa
+                                        </a>
+                                    @endif
+                                </div>
                             </td>
 
                         </tr>
